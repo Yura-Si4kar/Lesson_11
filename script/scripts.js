@@ -1,64 +1,79 @@
-const inputEl = document.querySelector('.input_text');
-const inputBtn = document.querySelector('.input_btn');
-const errorText = document.querySelector('.error');
-const resultEl = document.querySelector('.input_blocks');
+const ITEMS_CLASS = 'input_items';
+const DELETE_BTN_CLASS = 'delete_btn';
 
-inputEl.addEventListener('input', getInput)
-inputBtn.addEventListener('click', onAddInput);
-resultEl.addEventListener('click', changeColor);
+const LIST_TEMPLATE = document.querySelector('.list_template').innerHTML;
 
-function onAddInput() {
-    if (invalideInput()) {
-        showError();        
-    } else {
-        const li = createLi();
-        resultEl.append(li);
-        removeError();
-    }
-    
-    cleanString();
-}
+const addBtn = document.querySelector('.input_btn');
+const inputText = document.querySelector('.input_text');
+const taskList = document.querySelector('.list_block');
+const errorEl = document.querySelector('.error');
+const deleteBtn = document.querySelector('.delete_btn');
 
-function createLi() {
-    const listEl = document.createElement('li');
-    listEl.textContent = getInput();
-    return listEl;    
-}
 
-function getInput() {
-    const input = inputEl.value;
+addBtn.addEventListener('click', onAddLiItems);
+taskList.addEventListener('click', onListElementsClick);
 
-    if (invalideInput(input)) {
+const toDoList = [];
+
+function onAddLiItems(e) {
+    if (validateInput()) {
         showError();
-    } else if (Infinity >= input.length) {
-        removeError();
+        clearInputs();
+    } else {
+        remuveError();
+        addItems();
+        addToDoList();
     }
 
-    return input;
+    e.preventDefault();
+    clearInputs();
 }
 
-function invalideInput(value) {
-    return 3 >= inputEl.value.length || value==='' ? 'wrong' : null;
+function addItems() {
+    const taskItemHtml = getListHTML();
+
+    taskList.insertAdjacentHTML('beforeend', taskItemHtml);
 }
 
-function cleanString() {
-    inputEl.value = '';
+function getListHTML() {
+    return LIST_TEMPLATE.replace('{{Name}}', getInputText()) 
+}
+
+function getInputText() {
+    
+    return inputText.value;
+}
+
+function validateInput() {
+    const inputText = getInputText();
+
+    if (inputText==='') {
+        return (inputText==='')
+    }
+}
+
+function addToDoList() {
+    toDoList.push(getInputText());
+}
+
+function clearInputs() {
+    inputText.value = '';
+}
+
+function onListElementsClick(e) {
+    if (e.target.classList.contains(DELETE_BTN_CLASS)) {
+        deleteContacts(e.target.closest('.' + ITEMS_CLASS));
+    }
 }
 
 function showError() {
-    inputEl.classList.add('border_error');
-    errorText.classList.add('show');
+    errorEl.classList.add('show');
 }
 
-function removeError() {
-    inputEl.classList.remove('border_error');
-    errorText.classList.remove('show');
+function remuveError() {
+    errorEl.classList.remove('show');
 }
 
-function changeColor(li) {
-    if (li.target.style.color) {
-        li.target.style.color = '';
-    } else {
-        li.target.style.color = 'yellowgreen';
-    }
+function deleteContacts(el) {
+    el.remove();
 }
