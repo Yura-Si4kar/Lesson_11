@@ -1,79 +1,114 @@
-const ITEMS_CLASS = 'input_items';
-const DELETE_BTN_CLASS = 'delete_btn';
+const DELETE_BTN_CLASS = 'delete-btn';
+const INPUT_STRING = 'list_elements';
+const DONE_CLASS = 'done';
 
-const LIST_TEMPLATE = document.querySelector('.list_template').innerHTML;
-
+const inputForm = document.querySelector('.input_block');
+const toDoListEl = document.querySelector('.input_blocks');
+const listTemplate = document.querySelector('.list_template').innerHTML;
+const inputText = document.querySelectorAll('.input_text');
+const errorText = document.querySelector('.error');
 const addBtn = document.querySelector('.input_btn');
-const inputText = document.querySelector('.input_text');
-const taskList = document.querySelector('.list_block');
-const errorEl = document.querySelector('.error');
-const deleteBtn = document.querySelector('.delete_btn');
+const resultEl = document.querySelector('.input_blocks');
 
+inputForm.addEventListener('submit', onTaskFormSubmit);
+toDoListEl.addEventListener('click', onTasksListClick);
+// resultEl.addEventListener('click', changeColor);
 
-addBtn.addEventListener('click', onAddLiItems);
-taskList.addEventListener('click', onListElementsClick);
+let toDoList = [];
 
-const toDoList = [];
-
-function onAddLiItems(e) {
-    if (validateInput()) {
-        showError();
-        clearInputs();
-    } else {
-        remuveError();
-        addItems();
-        addToDoList();
-    }
-
+function onTaskFormSubmit(e) {
     e.preventDefault();
-    clearInputs();
-}
 
-function addItems() {
-    const taskItemHtml = getListHTML();
+    const newTask = getTask();
 
-    taskList.insertAdjacentHTML('beforeend', taskItemHtml);
-}
-
-function getListHTML() {
-    return LIST_TEMPLATE.replace('{{Name}}', getInputText()) 
-}
-
-function getInputText() {
-    
-    return inputText.value;
-}
-
-function validateInput() {
-    const inputText = getInputText();
-
-    if (inputText==='') {
-        return (inputText==='')
+    if (isTaskValid(newTask)) {
+        addTask(newTask);
+        resetForm();
+        removeError();
+    } else {
+        showError();
     }
 }
 
-function addToDoList() {
-    toDoList.push(getInputText());
+function getTask() {
+    const task = {};
+
+    inputText.forEach((inp) => {
+        task[inp.name] = inp.value;
+    });
+
+    return task;
 }
 
-function clearInputs() {
-    inputText.value = '';
+function generateTaskHtml(task) {
+    return listTemplate.replace('{{id}}', task.id)
+                        .replace('{{name}}', task.name)
+                        .replace('{{doneClass}}', task.done ? 'done' : '');
 }
 
-function onListElementsClick(e) {
+function isTaskValid(task) {
+    return isTextFieldValid(task.name);
+}
+
+function isTextFieldValid(value) {
+    return value !== '';
+}
+
+function addTask(task) {
+    const newTaskHtml = generateTaskHtml(task);
+    toDoListEl.insertAdjacentHTML('beforeend', newTaskHtml);
+
+    toDoList.push(task);
+    task.id = Date.now();
+    renderList();
+}
+
+function getTaskID(el) {
+    return +el.closest('.' + INPUT_STRING).dataset.id;
+}
+
+function onTasksListClick(e) {
+    if (e.target.classList.contains(INPUT_STRING)) {
+        taskID = getTaskID(e.target);
+        switchingСolors(taskID);
+    }
+
     if (e.target.classList.contains(DELETE_BTN_CLASS)) {
-        deleteContacts(e.target.closest('.' + ITEMS_CLASS));
-    }
+        taskID = getTaskID(e.target);
+        deleteTask(taskID);
+    }   
+}
+
+function renderList() {
+    toDoListEl.innerHTML = toDoList.map(generateTaskHtml).join('\n');
+}
+
+function resetForm() {
+    inputForm.reset();
+}
+
+function getTaskString(el) {
+    return el.closest('.' + INPUT_STRING);
 }
 
 function showError() {
-    errorEl.classList.add('show');
+    errorText.classList.add('show');
 }
 
-function remuveError() {
-    errorEl.classList.remove('show');
+function removeError() {
+    errorText.classList.remove('show');
 }
 
-function deleteContacts(el) {
-    el.remove();
+function switchingСolors(id) {
+    const task = toDoList.find((task) => task.id === id);
+
+    task.done = !task.done;
+
+    renderList();
+}
+
+function deleteTask(id) {
+    toDoList = toDoList.filter((task) => task.id !== id);
+
+    renderList();
 }

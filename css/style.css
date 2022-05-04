@@ -4,14 +4,11 @@
 }
 
 .body {
-    background-color: aquamarine;
-}
-
-.container {
-    max-width: 1300px;
-    padding: 20px 0 0;
+    width: 1400px;
     display: flex;
     justify-content: space-between;
+    padding-top: 20px;
+    background-color: aqua;
 }
 
 .input_block {
@@ -29,43 +26,42 @@
     border: 2px solid rgb(26, 26, 198);
 }
 
-.sending_btn {
-    background-color: aqua;
-    padding: 8px 15px;
-    border: none;
-    border-radius: 15px;
+.input_text.border_error {
+    border: 4px solid red;
 }
 
-.sending_btn:hover {
-    background-color: rgb(4, 195, 195);
-}
-
-.sending_btn:active {
-    background-color: rgb(2, 175, 175);
-}
-
-.delete_btn {
-    cursor: pointer;
-    border: none;
-    background-color: aquamarine;
-}
-
-.error{
-    color: red;
-    text-align: center;
-    display: none;
-    margin-top: 20px;
+.error {
+    opacity: 0;
+    visibility: hidden;
 }
 
 .error.show {
-    display: block;
+    color: red;
+    font-size: 20px;
+    opacity: 1;
+    visibility: visible;
+}
+
+.input_btn {
+    padding: 6px 20px;
+    background-color: blue;
+    cursor: pointer;
+    border: none;
+    border-radius: 20px;
+}
+
+.input_btn:hover {
+    background-color:rgb(56, 56, 248);
+}
+
+.input_btn:active{
+    background-color:rgb(1, 1, 205);
 }
 
 .list_block {
     width: 50%;
 }
 
-.input_items {
-    display: flex;
-    justify-content: space-between;
+.done {
+    color:yellowgreen;
 }
