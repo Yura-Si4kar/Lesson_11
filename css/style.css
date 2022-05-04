@@ -66,6 +66,9 @@
     color:yellowgreen;
 }
 
-.delete_btn {
-    
+.delete-btn {
+    border: none;
+    background-color: red;
+    padding: 4px 6px;
+    cursor: pointer;
 }
