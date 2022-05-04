@@ -12,7 +12,6 @@ const resultEl = document.querySelector('.input_blocks');
 
 inputForm.addEventListener('submit', onTaskFormSubmit);
 toDoListEl.addEventListener('click', onTasksListClick);
-// resultEl.addEventListener('click', changeColor);
 
 let toDoList = [];
 
